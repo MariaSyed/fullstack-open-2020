@@ -28,6 +28,7 @@ const App = ({ anecdotes }) => {
 
       <h1>Anecdote with most votes</h1>
       <p>{anecdotes[mostVotedAnecdoteIndex]}</p>
+      <p>has {votes[mostVotedAnecdoteIndex]} votes</p>
     </div>
   );
 };
