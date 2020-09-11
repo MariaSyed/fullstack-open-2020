@@ -1,0 +1,33 @@
+note over browser:
+user types text into form input and submits
+end note over
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+server-->browser: [302] Redirect to /exampleapp/notes
+
+note over browser:
+Redirects to /exampleapp/notes
+end note
+
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server-->browser: main.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{"content":"note","date":"2020-09-11T08:23:27.802Z"}, ... ]
+browser->server: HTTP GET https://studies.cs.helsinki.fi/favicon.ico
+server-->browser: Favicon HTML-code
+
+note over browser:
+browser executes the event handler
+that renders notes including new note to display
+end note
