@@ -31,7 +31,7 @@ const App = () => {
       <div>
         {selectedCountry || countries.length === 1 ? (
           <CountryInfo country={selectedCountry || countries[0]} />
-        ) : filter && countries.length > 10 ? (
+        ) : countries.length > 10 ? (
           'Too many matches, specify another filter'
         ) : (
           countries.map((country) => (
