@@ -1,5 +1,9 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3030/api/persons';
+
+const baseUrl =
+  process.env.APP_ENV === 'production'
+    ? 'https://phonebook-fso20.herokuapp.com/api/persons'
+    : 'http://localhost:3030/api/persons';
 
 const getAll = async () => {
   const response = await axios.get(baseUrl);
