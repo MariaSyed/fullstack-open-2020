@@ -50,11 +50,12 @@ app.delete('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (req, res) => {
   const { name, number } = req.body;
 
-  if (!name || !number) {
-    res
-      .status(400)
-      .send('Bad Request: name and number is required in request body');
-  }
+  if (!name || !number)
+    res.status(400).json({ error: 'name and number required' });
+
+  const existingPerson = persons.find((p) => p.name === name);
+
+  if (existingPerson) res.status(403).json({ error: 'name must be unique' });
 
   persons.push({ name, number, id: Math.ceil(Math.random() * 100) });
 
