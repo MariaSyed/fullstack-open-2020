@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3003/persons';
+const baseUrl = 'http://localhost:3030/api/persons';
 
 const getAll = async () => {
   const response = await axios.get(baseUrl);
