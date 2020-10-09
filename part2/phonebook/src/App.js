@@ -76,12 +76,24 @@ const App = () => {
   };
 
   const handleUpdatePerson = async (personToUpdate) => {
+    const { name } = personToUpdate;
+
     const confirmed = window.confirm(
-      `${personToUpdate.name} is already added to phonebook, replace old number with new one?`
+      `${name} is already added to phonebook, replace old number with new one?`
     );
-    if (confirmed) {
+    if (!confirmed) return;
+
+    try {
       await personService.update(personToUpdate);
-      handleSuccessMessage(`Updated ${personToUpdate.name}`);
+      handleSuccessMessage(`Updated ${name}`);
+    } catch (error) {
+      if (error.response?.status === 404) {
+        // Not found
+        handleErrorMessage(
+          `Information of ${name} has already been removed from the server`
+        );
+      }
+    } finally {
       refreshPersons();
     }
   };
