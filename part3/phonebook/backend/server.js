@@ -2,6 +2,10 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const app = express();
 app.use(express.json());
 
@@ -74,7 +78,8 @@ app.post('/api/persons', (req, res) => {
   res.status(201).send(`Created person ${name} with number ${number}`);
 });
 
-const PORT = 3030;
+const PORT = process.env.PORT || 3030;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

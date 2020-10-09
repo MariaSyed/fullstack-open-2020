@@ -1,1 +1,7 @@
-GET http://localhost:3030/api/persons
+POST http://localhost:3030/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tory",
+    "number": "0506050235"
+}
