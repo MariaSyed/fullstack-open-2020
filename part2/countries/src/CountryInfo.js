@@ -21,6 +21,7 @@ const WeatherInfo = ({ capital, weatherInfo }) => (
     </p>
     <img
       src={(weatherInfo?.weather_icons || [])[0] || weatherPlaceholderIconUrl}
+      alt={`weather icon for ${capital}`}
     />
     <p>
       <strong>wind: </strong>

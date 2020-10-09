@@ -69,10 +69,10 @@ const App = () => {
 
   const handleDeletePerson = async (personToDelete) => {
     const confirmed = window.confirm(`Delete ${personToDelete.name}?`);
-    if (confirmed) {
-      await personService.delete(personToDelete);
-      refreshPersons();
-    }
+    if (!confirmed) return;
+
+    await personService.delete(personToDelete);
+    refreshPersons();
   };
 
   const handleUpdatePerson = async (personToUpdate) => {

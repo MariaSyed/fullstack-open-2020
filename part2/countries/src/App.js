@@ -35,7 +35,7 @@ const App = () => {
           'Too many matches, specify another filter'
         ) : (
           countries.map((country) => (
-            <p>
+            <p key={country.numericCode}>
               {country.name}
               <button onClick={selectCountry(country)}>show</button>
             </p>
