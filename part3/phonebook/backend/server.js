@@ -1,8 +1,9 @@
 const express = require('express');
 
 const app = express();
+app.use(express.json());
 
-const persons = [
+let persons = [
   {
     name: 'Arto Hellas',
     number: '040-123456',
@@ -25,14 +26,39 @@ const persons = [
   },
 ];
 
+app.get('/info', (_, res) => {
+  res.send(
+    `<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`
+  );
+});
+
 app.get('/api/persons', (_, res) => {
   res.json(persons);
 });
 
-app.get('/info', (req, res) => {
-  res.send(
-    `<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`
-  );
+app.get('/api/persons/:id', (req, res) => {
+  const person = persons.find((p) => `${p.id}` === req.params.id);
+  if (!person) res.status(404).send('Error 404: Person not found');
+  res.json(person);
+});
+
+app.delete('/api/persons/:id', (req, res) => {
+  persons = persons.filter((p) => `${p.id}` !== req.params.id);
+  res.status(200).send('Removed!');
+});
+
+app.post('/api/persons', (req, res) => {
+  const { name, number } = req.body;
+
+  if (!name || !number) {
+    res
+      .status(400)
+      .send('Bad Request: name and number is required in request body');
+  }
+
+  persons.push({ name, number, id: Math.ceil(Math.random() * 100) });
+
+  res.status(201).send(`Created person ${name} with number ${number}`);
 });
 
 const PORT = 3030;
