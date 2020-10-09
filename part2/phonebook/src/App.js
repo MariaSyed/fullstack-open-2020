@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
+import Notification from './Notification';
 import personService from './services/persons';
 
 const App = () => {
@@ -9,6 +10,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [nameFilter, setNameFilter] = useState('');
   const [persons, setPersons] = useState([]);
+
+  const [notificationMessage, setNotificationMessage] = useState();
+  const [notificationVariant, setNotificationVariant] = useState();
 
   useEffect(() => {
     refreshPersons();
@@ -22,6 +26,20 @@ const App = () => {
   const resetForm = () => {
     setNewName('');
     setNewNumber('');
+  };
+
+  const handleSuccessMessage = (successMessage) => {
+    setNotificationVariant('success');
+    setNotificationMessage(successMessage);
+
+    setTimeout(() => setNotificationMessage(), 3000);
+  };
+
+  const handleErrorMessage = (errorMessage) => {
+    setNotificationVariant('error');
+    setNotificationMessage(errorMessage);
+
+    setTimeout(() => setNotificationMessage(), 3000);
   };
 
   const handleSubmitForm = async (event) => {
@@ -45,6 +63,7 @@ const App = () => {
 
   const handleCreatePerson = async () => {
     await personService.create({ name: newName, number: newNumber });
+    handleSuccessMessage(`Added ${newName}`);
     refreshPersons();
   };
 
@@ -62,6 +81,7 @@ const App = () => {
     );
     if (confirmed) {
       await personService.update(personToUpdate);
+      handleSuccessMessage(`Updated ${personToUpdate.name}`);
       refreshPersons();
     }
   };
@@ -71,6 +91,11 @@ const App = () => {
       <h2>Phonebook</h2>
 
       <Filter filter={nameFilter} setFilter={setNameFilter} />
+
+      <Notification
+        variant={notificationVariant}
+        message={notificationMessage}
+      />
 
       <h3>Add a new</h3>
 
