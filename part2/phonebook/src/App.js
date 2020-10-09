@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Filter from './Filter';
-import PersonForm from './PersonForm';
-import Persons from './Persons';
-import Notification from './Notification';
 import personService from './services/persons';
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
+import Notification from './components/Notification';
 
 const App = () => {
   const [newName, setNewName] = useState('');
