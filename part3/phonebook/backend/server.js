@@ -1,7 +1,15 @@
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 app.use(express.json());
+
+morgan.token('req-body', (req) => JSON.stringify(req.body));
+app.use(
+  morgan(
+    ':method :url :status :res[content-length] - :response-time ms :req-body'
+  )
+);
 
 let persons = [
   {
@@ -51,11 +59,12 @@ app.post('/api/persons', (req, res) => {
   const { name, number } = req.body;
 
   if (!name || !number)
-    res.status(400).json({ error: 'name and number required' });
+    return res.status(400).json({ error: 'name and number required' });
 
   const existingPerson = persons.find((p) => p.name === name);
 
-  if (existingPerson) res.status(403).json({ error: 'name must be unique' });
+  if (existingPerson)
+    return res.status(403).json({ error: 'name must be unique' });
 
   persons.push({ name, number, id: Math.ceil(Math.random() * 100) });
 
