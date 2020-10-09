@@ -6,7 +6,7 @@ const Person = ({ person }) => (
   </p>
 );
 
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, deletePerson }) => {
   return (
     <div>
       {persons
@@ -16,7 +16,10 @@ const Persons = ({ persons, filter }) => {
             : true
         )
         .map((person) => (
-          <Person key={person.name} person={person} />
+          <span key={person.id}>
+            <Person key={person.name} person={person} />
+            <button onClick={() => deletePerson(person)}>delete</button>
+          </span>
         ))}
     </div>
   );

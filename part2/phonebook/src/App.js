@@ -11,22 +11,58 @@ const App = () => {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    personService.getAll().then((fetchedPersons) => setPersons(fetchedPersons));
+    refreshPersons();
   }, []);
+
+  const refreshPersons = async () => {
+    const fetchedPersons = await personService.getAll();
+    setPersons(fetchedPersons);
+  };
+
+  const resetForm = () => {
+    setNewName('');
+    setNewNumber('');
+  };
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
 
-    if (persons.find((person) => person.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`);
+    const existingPerson = persons.find((person) => person.name === newName);
+    const isDuplicate = existingPerson && existingPerson.number === newNumber;
+
+    if (isDuplicate) {
+      window.alert(
+        `${newName} with number ${newNumber} is already added to phonebook`
+      );
+    } else if (existingPerson && !isDuplicate) {
+      handleUpdatePerson({ ...existingPerson, number: newNumber });
     } else {
-      const newPerson = await personService.create({
-        name: newName,
-        number: newNumber,
-      });
-      setPersons([...persons, newPerson]);
-      setNewName('');
-      setNewNumber('');
+      handleCreatePerson();
+    }
+
+    resetForm();
+  };
+
+  const handleCreatePerson = async () => {
+    await personService.create({ name: newName, number: newNumber });
+    refreshPersons();
+  };
+
+  const handleDeletePerson = async (personToDelete) => {
+    const confirmed = window.confirm(`Delete ${personToDelete.name}?`);
+    if (confirmed) {
+      await personService.delete(personToDelete);
+      refreshPersons();
+    }
+  };
+
+  const handleUpdatePerson = async (personToUpdate) => {
+    const confirmed = window.confirm(
+      `${personToUpdate.name} is already added to phonebook, replace old number with new one?`
+    );
+    if (confirmed) {
+      await personService.update(personToUpdate);
+      refreshPersons();
     }
   };
 
@@ -48,7 +84,11 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={persons} filter={nameFilter} />
+      <Persons
+        persons={persons}
+        filter={nameFilter}
+        deletePerson={handleDeletePerson}
+      />
     </div>
   );
 };
