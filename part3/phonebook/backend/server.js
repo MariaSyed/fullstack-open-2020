@@ -15,20 +15,39 @@ mongoose.connect(url, {
 });
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 3,
+  },
+  number: { type: String, required: true, unique: false, minlength: 8 },
 });
 
 personSchema.plugin(uniqueValidator);
 
 const Person = mongoose.model('Person', personSchema);
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
-
+const errorHandler = (error, _, response, next) => {
+  console.log('errorHandler -> error', error);
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' });
+    return response.status(400).send({ message: 'malformatted id' });
   }
+
+  if (error.name === 'ValidationError') {
+    const nameError = error.errors?.name;
+    const numberError = error.errors?.number;
+
+    if (nameError?.kind === 'unique') {
+      return response.status(409).json({ message: error.message });
+    }
+
+    if (nameError?.kind === 'minlength' || numberError?.kind === 'minlength') {
+      return response.status(422).json({ message: error.message });
+    }
+  }
+
+  response.status(500).json({ message: error.message });
 
   next(error);
 };
@@ -58,7 +77,7 @@ app.get('/api/persons', (_, res) => {
   Person.find({}).then((person) => res.json(person));
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
     .then((person) => {
       if (person) {
@@ -70,37 +89,46 @@ app.get('/api/persons/:id', (req, res) => {
     .catch((error) => next(error));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
     .then(() => res.status(204).end())
     .catch((error) => next(error));
 });
 
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
   const person = {
     name: req.body.name,
     number: req.body.number,
   };
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  console.log('updating...');
+
+  Person.findByIdAndUpdate(req.params.id, person, {
+    new: true,
+    runValidators: true,
+    context: 'query',
+  })
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })
     .catch((error) => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body;
 
   if (!name || !number) {
-    return res.status(400).json({ error: 'name and/or number missing' });
+    return res.status(400).json({ message: 'name and/or number missing' });
   }
 
   const person = new Person({ name, number });
 
-  person.save().then((savedPerson) => {
-    res.status(201).json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      res.status(201).json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.use(errorHandler);

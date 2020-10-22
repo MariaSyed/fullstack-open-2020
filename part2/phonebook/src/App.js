@@ -62,9 +62,13 @@ const App = () => {
   };
 
   const handleCreatePerson = async () => {
-    await personService.create({ name: newName, number: newNumber });
-    handleSuccessMessage(`Added ${newName}`);
-    refreshPersons();
+    try {
+      await personService.create({ name: newName, number: newNumber });
+      handleSuccessMessage(`Added ${newName}`);
+      refreshPersons();
+    } catch (error) {
+      handleErrorMessage(error.response?.data.message);
+    }
   };
 
   const handleDeletePerson = async (personToDelete) => {
@@ -92,7 +96,9 @@ const App = () => {
         handleErrorMessage(
           `Information of ${name} has already been removed from the server`
         );
+        return;
       }
+      handleErrorMessage(error.response?.data.message);
     } finally {
       refreshPersons();
     }

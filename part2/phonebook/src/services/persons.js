@@ -10,11 +10,11 @@ const getAll = async () => {
   return response.data;
 };
 
-const create = (newPerson) => axios.post(baseUrl, newPerson);
+const create = async (newPerson) => axios.post(baseUrl, newPerson);
 
 const remove = (person) => axios.delete(`${baseUrl}/${person._id}`);
 
-const update = async (person) => axios.put(`${baseUrl}/${person._id}`, person);
+const update = (person) => axios.put(`${baseUrl}/${person._id}`, person);
 
 export default {
   getAll,
