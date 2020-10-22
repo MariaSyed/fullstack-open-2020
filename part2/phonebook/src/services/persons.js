@@ -12,9 +12,9 @@ const getAll = async () => {
 
 const create = (newPerson) => axios.post(baseUrl, newPerson);
 
-const remove = (person) => axios.delete(`${baseUrl}/${person.id}`);
+const remove = (person) => axios.delete(`${baseUrl}/${person._id}`);
 
-const update = async (person) => axios.put(`${baseUrl}/${person.id}`, person);
+const update = async (person) => axios.put(`${baseUrl}/${person._id}`, person);
 
 export default {
   getAll,

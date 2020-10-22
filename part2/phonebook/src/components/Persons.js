@@ -16,7 +16,7 @@ const Persons = ({ persons, filter, deletePerson }) => {
             : true
         )
         .map((person) => (
-          <span key={person.id}>
+          <span key={person._id}>
             <Person key={person.name} person={person} />
             <button onClick={() => deletePerson(person)}>delete</button>
           </span>
