@@ -34,14 +34,16 @@ const errorHandler = (error, _, response, next) => {
   }
 
   if (error.name === 'ValidationError') {
-    const nameError = error.errors?.name;
-    const numberError = error.errors?.number;
+    const { name: nameError, number: numberError } = error.errors || {};
 
-    if (nameError?.kind === 'unique') {
+    const { kind: nameErrorKind } = nameError || {};
+    const { kind: numberErrorKind } = numberError || {};
+
+    if (nameErrorKind === 'unique') {
       return response.status(409).json({ message: error.message });
     }
 
-    if (nameError?.kind === 'minlength' || numberError?.kind === 'minlength') {
+    if (nameErrorKind === 'minlength' || numberErrorKind === 'minlength') {
       return response.status(422).json({ message: error.message });
     }
   }
