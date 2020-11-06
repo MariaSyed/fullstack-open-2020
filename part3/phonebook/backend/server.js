@@ -29,7 +29,6 @@ personSchema.plugin(uniqueValidator);
 const Person = mongoose.model('Person', personSchema);
 
 const errorHandler = (error, _, response, next) => {
-  console.log('errorHandler -> error', error);
   if (error.name === 'CastError') {
     return response.status(400).send({ message: 'malformatted id' });
   }
@@ -100,8 +99,6 @@ app.put('/api/persons/:id', (req, res, next) => {
     name: req.body.name,
     number: req.body.number,
   };
-
-  console.log('updating...');
 
   Person.findByIdAndUpdate(req.params.id, person, {
     new: true,
