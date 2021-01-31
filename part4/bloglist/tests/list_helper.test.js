@@ -14,11 +14,11 @@ const listWithOneBlog = [generateBlog()];
 
 const listWithManyBlogs = [
   { ...generateBlog(), author: 'A', likes: 5 },
-  { ...generateBlog(), author: 'Most blogs', likes: 10 },
+  { ...generateBlog(), author: 'Most likes', likes: 10 },
+  { ...generateBlog(), author: 'Most likes', likes: 5 },
   { ...generateBlog(), author: 'Most blogs', likes: 3 },
   { ...generateBlog(), author: 'Most blogs', likes: 2 },
-  { ...generateBlog(), author: 'A', likes: 5 },
-  { ...generateBlog(), author: 'B', likes: 5 },
+  { ...generateBlog(), author: 'Most blogs', likes: 5 },
 ];
 
 test('dummy returns one', () => {
@@ -46,9 +46,9 @@ describe('total likes', () => {
 });
 
 describe('favourite blog', () => {
-  test('of empty list is undefined', () => {
+  test('of empty list is empty obj', () => {
     const result = listHelper.favoriteBlog([]);
-    expect(result).toEqual(undefined);
+    expect(result).toEqual({});
   });
 
   test('when list has only one blog, equals that blog', () => {
@@ -63,9 +63,9 @@ describe('favourite blog', () => {
 });
 
 describe('most blogs', () => {
-  test('of empty list is undefined', () => {
+  test('of empty list is empty obj', () => {
     const result = listHelper.mostBlogs([]);
-    expect(result).toEqual(undefined);
+    expect(result).toEqual({});
   });
 
   test('when list has only one blog, equals that author', () => {
@@ -81,6 +81,29 @@ describe('most blogs', () => {
     expect(result).toEqual({
       author: 'Most blogs',
       blogs: 3,
+    });
+  });
+});
+
+describe('most likes', () => {
+  test('of empty list is empty obj', () => {
+    const result = listHelper.mostLikes([]);
+    expect(result).toEqual({});
+  });
+
+  test('when list has only one blog, equals that author with likes', () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    expect(result).toEqual({
+      author: listWithOneBlog[0].author,
+      likes: listWithOneBlog[0].likes,
+    });
+  });
+
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.mostLikes(listWithManyBlogs);
+    expect(result).toEqual({
+      author: 'Most likes',
+      likes: 15,
     });
   });
 });
