@@ -13,10 +13,12 @@ const generateBlog = () => ({
 const listWithOneBlog = [generateBlog()];
 
 const listWithManyBlogs = [
-  { ...generateBlog(), likes: 5 },
-  { ...generateBlog(), likes: 10 },
-  { ...generateBlog(), likes: 3 },
-  { ...generateBlog(), likes: 2 },
+  { ...generateBlog(), author: 'A', likes: 5 },
+  { ...generateBlog(), author: 'Most blogs', likes: 10 },
+  { ...generateBlog(), author: 'Most blogs', likes: 3 },
+  { ...generateBlog(), author: 'Most blogs', likes: 2 },
+  { ...generateBlog(), author: 'A', likes: 5 },
+  { ...generateBlog(), author: 'B', likes: 5 },
 ];
 
 test('dummy returns one', () => {
@@ -39,7 +41,7 @@ describe('total likes', () => {
 
   test('of a bigger list is calculated right', () => {
     const result = listHelper.totalLikes(listWithManyBlogs);
-    expect(result).toBe(20);
+    expect(result).toBe(30);
   });
 });
 
@@ -57,5 +59,28 @@ describe('favourite blog', () => {
   test('of a bigger list is calculated right', () => {
     const result = listHelper.favoriteBlog(listWithManyBlogs);
     expect(result).toBe(listWithManyBlogs[1]);
+  });
+});
+
+describe('most blogs', () => {
+  test('of empty list is undefined', () => {
+    const result = listHelper.mostBlogs([]);
+    expect(result).toEqual(undefined);
+  });
+
+  test('when list has only one blog, equals that author', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+    expect(result).toEqual({
+      author: listWithOneBlog[0].author,
+      blogs: 1,
+    });
+  });
+
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs);
+    expect(result).toEqual({
+      author: 'Most blogs',
+      blogs: 3,
+    });
   });
 });
