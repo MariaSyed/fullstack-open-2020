@@ -4,14 +4,6 @@ const Blog = require('../models/blog');
 const User = require('../models/user');
 const config = require('../utils/config');
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 const blogsRouter = express.Router();
 
 blogsRouter.get('/', async (request, response) => {
@@ -21,10 +13,10 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   const body = request.body;
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, config.SECRET);
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' });
+
+  const decodedToken = jwt.verify(request.token, config.SECRET);
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'Token missing or invalid' });
   }
   const user = await User.findById(decodedToken.id);
 
@@ -42,13 +34,31 @@ blogsRouter.post('/', async (request, response) => {
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
-  const result = await Blog.deleteOne({ _id: request.params.id });
-  if (result.deletedCount === 0) throw new Error('Invalid id');
+  const decodedToken = jwt.verify(request.token, config.SECRET);
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'Token missing or invalid' });
+  }
+
+  const blogId = request.params.id;
+
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) {
+    return response.status(400).json({ error: 'Invalid id' });
+  }
+
+  if (blog.user.toString() !== decodedToken.id) {
+    return response
+      .status(403)
+      .json({ error: 'User is not allowed to perform this action' });
+  }
+
+  await Blog.deleteOne({ _id: blogId });
 
   return response.status(204).end();
 });
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.patch('/:id', async (request, response) => {
   const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id,
     request.body,
