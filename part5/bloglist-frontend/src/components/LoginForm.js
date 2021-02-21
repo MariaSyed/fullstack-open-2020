@@ -9,7 +9,7 @@ const LoginForm = ({ onLogin }) => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    onLogin(username, password);
+    onLogin({ username, password });
   };
 
   return (
