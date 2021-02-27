@@ -3,6 +3,7 @@ import AddBlogForm from './components/AddBlogForm';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -30,11 +31,12 @@ const App = () => {
     refreshBlogs();
 
     const loggedUser = localStorage.getLoggedUser();
-    if (loggedUser) {
-      setUser(loggedUser);
-      blogService.setToken(loggedUser.token);
-    }
+    if (loggedUser) setUser(loggedUser);
   }, []);
+
+  useEffect(() => {
+    if (user) blogService.setToken(user.token);
+  }, [user])
 
   const showSuccessMessage = (message) => {
     setSuccessMessage(message);
@@ -89,7 +91,11 @@ const App = () => {
             </p>
             <button type="submit" onClick={handleLogout}>logout</button>
             {' '}
+
+            <Togglable buttonLabel="new blog">
             <AddBlogForm onAddBlog={handleAddBlog} />
+            </Togglable>
+
             {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
           </>
         ) : (
