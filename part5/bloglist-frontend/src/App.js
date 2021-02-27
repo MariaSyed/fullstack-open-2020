@@ -23,8 +23,8 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const refreshBlogs = async () => {
-    const b = await blogService.getAll();
-    setBlogs(b);
+    const fetchedBlogs = (await blogService.getAll()).sort((a, b) => b.likes - a.likes)
+    setBlogs(fetchedBlogs);
   };
 
   useEffect(() => {
@@ -75,6 +75,15 @@ const App = () => {
     }
   };
 
+  const handleLikeBlog = async (blog) => {
+    try {
+      await blogService.update(blog.id, { likes: blog.likes + 1 });
+      refreshBlogs();
+    } catch (err) {
+      showErrorMessage('Failed to update blog')
+    }
+  }
+
   return (
     <div>
       <Notification variant="success" message={successMessage} />
@@ -96,7 +105,7 @@ const App = () => {
               <BlogForm createBlog={handleAddBlog} />
             </Togglable>
 
-            {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+            {blogs.map((blog) => <Blog key={blog.id} blog={blog} onLike={handleLikeBlog} />)}
           </>
         ) : (
           <>

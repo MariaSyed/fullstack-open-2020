@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, onLike }) => {
   const [expanded, setExpanded] = useState(false);
+
+  const handleLike = () => onLike(blog);
 
   const expandedEl = (
     <div>
       <p>{blog.url}</p>
-      <p>likes: {blog.likes} <button onClick={() => {}}>like</button></p>
+      <p>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
       <p>{blog.user?.username}</p>
     </div>
   )
