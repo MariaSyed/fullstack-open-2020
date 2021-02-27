@@ -31,9 +31,9 @@ describe('Blog api', () => {
 
     test('returns all blogs with unique identifier id', async () => {
       const response = await api.get('/api/blogs');
-      for (let blog of response.body) {
-        expect(blog._id).toBeDefined();
-      }
+      response.body.forEach((blog) => {
+        expect(blog.id).toBeDefined();
+      });
     });
   });
 
@@ -108,7 +108,7 @@ describe('Blog api', () => {
       const blogToDelete = blogsAtStart[0];
 
       await api
-        .delete(`/api/blogs/${blogToDelete._id}`)
+        .delete(`/api/blogs/${blogToDelete.id}`)
         .set('Authorization', `Bearer ${token}`)
         .expect(204);
 
@@ -137,7 +137,7 @@ describe('Blog api', () => {
       const blogUpdate = { author: 'Updated Author' };
 
       await api
-        .patch(`/api/blogs/${blogToUpdate._id}`)
+        .patch(`/api/blogs/${blogToUpdate.id}`)
         .send(blogUpdate)
         .expect(200);
 
