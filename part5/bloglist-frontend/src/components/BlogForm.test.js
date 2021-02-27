@@ -20,15 +20,15 @@ describe('BlogForm', () => {
       url: 'example123.com'
     }
 
-    const title = component.getByTestId('title-input')
-    const author = component.getByTestId('author-input')
-    const url = component.getByTestId('url-input')
+    const title = component.container.querySelector('#title')
+    const author = component.container.querySelector('#author')
+    const url = component.container.querySelector('#url')
 
     fireEvent.change(title, { target: { value: newBlog.title } })
     fireEvent.change(author, { target: { value: newBlog.author } })
     fireEvent.change(url, { target: { value: newBlog.url } })
 
-    fireEvent.click(component.getByText('create'))
+    fireEvent.click(component.getByText('save'))
 
     expect(createBlogMock).toBeCalledWith(newBlog)
   })
