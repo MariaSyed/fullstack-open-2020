@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog, onLike }) => {
+const Blog = ({ blog, onLike, onRemove, isOwnBlog }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleLike = () => onLike(blog);
+
+  const handleRemove = () => {
+    const confirmed = window.confirm(`Are you sure you want to remove blog: ${blog.title} by ${blog.author}`);
+    if (confirmed) onRemove(blog);
+  }
 
   const expandedEl = (
     <div>
       <p>{blog.url}</p>
       <p>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
       <p>{blog.user?.username}</p>
+      { isOwnBlog && <button onClick={handleRemove}>remove</button> }
     </div>
   )
 

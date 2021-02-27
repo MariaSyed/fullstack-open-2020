@@ -84,6 +84,19 @@ const App = () => {
     }
   }
 
+  const handleRemoveBlog = async (blog) => {
+    try {
+      await blogService.remove(blog.id);
+      refreshBlogs();
+
+      showSuccessMessage(`Deleted blog: ${blog.title}`);
+    } catch (err) {
+      showErrorMessage('Failed to delete blog');
+    }
+  }
+
+  const isOwnBlog = (blog) => blog.user.username === user.username;
+
   return (
     <div>
       <Notification variant="success" message={successMessage} />
@@ -105,7 +118,16 @@ const App = () => {
               <BlogForm createBlog={handleAddBlog} />
             </Togglable>
 
-            {blogs.map((blog) => <Blog key={blog.id} blog={blog} onLike={handleLikeBlog} />)}
+            {blogs.map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                onLike={handleLikeBlog}
+                onRemove={handleRemoveBlog}
+                isOwnBlog={isOwnBlog(blog)}
+              />
+             )
+            )}
           </>
         ) : (
           <>
