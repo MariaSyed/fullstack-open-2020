@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render, fireEvent, screen } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
 const blog = {
