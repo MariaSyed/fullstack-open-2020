@@ -89,7 +89,7 @@ const App = () => {
       await blogService.remove(blog.id)
       refreshBlogs()
 
-      showSuccessMessage(`Deleted blog: ${blog.title}`)
+      showSuccessMessage(`Deleted blog: ${blog.title} by ${blog.author}`)
     } catch (err) {
       showErrorMessage('Failed to delete blog')
     }

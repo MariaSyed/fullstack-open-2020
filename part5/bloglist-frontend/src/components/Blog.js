@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { object, func, bool } from 'prop-types'
 
+const containerStyles = { margin: 10, border: '1px solid', padding: 10 }
+
 const Blog = ({ blog, onLike, onRemove, isOwnBlog }) => {
   const [expanded, setExpanded] = useState(false)
 
@@ -25,7 +27,7 @@ const Blog = ({ blog, onLike, onRemove, isOwnBlog }) => {
   const toggleExpanded = () => setExpanded(!expanded)
 
   return (
-    <div style={{ margin: 10, border: '1px solid', padding: 10 }}>
+    <div className="blog" style={containerStyles}>
       {blog.title + ' ' + blog.author + ' '}
 
       <button onClick={toggleExpanded}>{expanded ? 'hide' : 'view'}</button>
