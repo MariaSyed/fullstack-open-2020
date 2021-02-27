@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AddBlogForm from './components/AddBlogForm';
+import BlogForm from './components/BlogForm';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
@@ -93,7 +93,7 @@ const App = () => {
             {' '}
 
             <Togglable buttonLabel="new blog">
-            <AddBlogForm onAddBlog={handleAddBlog} />
+              <BlogForm createBlog={handleAddBlog} />
             </Togglable>
 
             {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
