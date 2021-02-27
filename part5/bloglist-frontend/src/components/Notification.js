@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const commonStyles = {
   container: {
@@ -9,7 +9,7 @@ const commonStyles = {
     backgroundColor: '#f0f0f0',
   },
   text: {},
-};
+}
 
 const styles = {
   container: {
@@ -32,12 +32,12 @@ const styles = {
       color: 'red',
     },
   },
-};
+}
 
 const Notification = ({ variant = 'success', message }) => (message ? (
   <div style={styles.container[variant]}>
     <h2 style={styles.text[variant]}>{message}</h2>
   </div>
-) : null);
+) : null)
 
-export default Notification;
+export default Notification

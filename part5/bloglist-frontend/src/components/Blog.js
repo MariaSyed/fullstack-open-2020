@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { object, func, bool } from 'prop-types';
 
 const Blog = ({ blog, onLike, onRemove, isOwnBlog }) => {
   const [expanded, setExpanded] = useState(false);
@@ -30,6 +31,17 @@ const Blog = ({ blog, onLike, onRemove, isOwnBlog }) => {
        { expanded && expandedEl}
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: object.isRequired,
+  onLike: func.isRequired,
+  onRemove: func.isRequired,
+  isOwnBlog: bool
+}
+
+Blog.defaulProps = {
+  isOwnBlog: false
 }
 
 export default Blog;

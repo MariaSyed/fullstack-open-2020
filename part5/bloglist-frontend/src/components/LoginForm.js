@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const LoginForm = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-  const onChangeUsername = ({ target: { value } }) => setUsername(value);
-  const onChangePassword = ({ target: { value } }) => setPassword(value);
+  const onChangeUsername = ({ target: { value } }) => setUsername(value)
+  const onChangePassword = ({ target: { value } }) => setPassword(value)
 
   const onSubmit = (event) => {
-    event.preventDefault();
-    onLogin({ username, password });
-  };
+    event.preventDefault()
+    onLogin({ username, password })
+  }
 
   return (
     <form onSubmit={onSubmit}>
@@ -24,7 +24,7 @@ const LoginForm = ({ onLogin }) => {
       </div>
       <button type="submit">login</button>
     </form>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm
