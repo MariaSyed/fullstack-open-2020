@@ -49,7 +49,7 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   if (blog.user.toString() !== decodedToken.id) {
     return response
-      .status(403)
+      .status(401)
       .json({ error: 'User is not allowed to perform this action' });
   }
 
